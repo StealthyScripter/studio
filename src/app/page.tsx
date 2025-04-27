@@ -7,8 +7,19 @@ import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useToast} from '@/hooks/use-toast';
 import {Separator} from '@/components/ui/separator';
 import {Phone, Contact, Clock} from 'lucide-react';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const countryCodes = [
   {label: 'United States', code: '+1'},
@@ -36,21 +47,12 @@ export default function Home() {
   const [countryCode, setCountryCode] = useState('+1');
   const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('keypad');
   const {toast} = useToast();
 
   const handleCall = async () => {
     setIsLoading(true);
     try {
-      // const callRequest: CallRequest = {
-      //   phoneNumber: phoneNumber,
-      //   countryCode: countryCode,
-      // };
-      // const callData = await initiateCall(callRequest);
-      // setCallInfo(callData);
-      // toast({
-      //   title: 'Call initiated',
-      //   description: `Call duration: ${callData.duration} seconds, Cost: $${callData.cost}`,
-      // });
       await new Promise(resolve => setTimeout(resolve, 1000));
       const duration = Math.floor(Math.random() * 300) + 30;
       const cost = duration * 0.001;
@@ -149,7 +151,7 @@ export default function Home() {
                 <SelectValue placeholder="Select country code" />
               </SelectTrigger>
               <SelectContent>
-                {countryCodes.map((country) => (
+                {countryCodes.map(country => (
                   <SelectItem key={country.code} value={country.code}>
                     {country.label} ({country.code})
                   </SelectItem>
@@ -179,7 +181,8 @@ export default function Home() {
       </Card>
 
       <Tabs
-        defaultValue="keypad"
+        defaultValue={activeTab}
+        onValueChange={setActiveTab}
         className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md"
       >
         <TabsList>
@@ -222,15 +225,27 @@ export default function Home() {
         </Card>
       )}
       <footer className="flex justify-around w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
-        <a href="#" className="flex flex-col items-center">
-          <Phone className="h-5 w-5 mb-1" />
-          Call
-        </a>
-        <a href="#" className="flex flex-col items-center">
+        <a
+          href="#"
+          className="flex flex-col items-center"
+          onClick={() => setActiveTab('recent')}
+        >
           <Clock className="h-5 w-5 mb-1" />
           Recent
         </a>
-        <a href="#" className="flex flex-col items-center">
+        <a
+          href="#"
+          className="flex flex-col items-center"
+          onClick={() => setActiveTab('keypad')}
+        >
+          <Phone className="h-5 w-5 mb-1" />
+          Keypad
+        </a>
+        <a
+          href="#"
+          className="flex flex-col items-center"
+          onClick={() => setActiveTab('contacts')}
+        >
           <Contact className="h-5 w-5 mb-1" />
           Contacts
         </a>
