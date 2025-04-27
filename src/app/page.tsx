@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {ScrollArea} from '@/components/ui/scroll-area';
 
 const countryCodes = [
   {label: 'United States', code: '+1'},
@@ -158,7 +157,7 @@ export default function Home() {
   );
 
   const RecentCalls = () => (
-    <ScrollArea className="p-4 flex-grow min-h-0 overflow-y-auto">
+    <div className="p-4 flex-grow min-h-0">
       {dummyRecentCalls.map(call => (
         <Card key={call.id} className="mb-2">
           <CardContent>
@@ -168,11 +167,11 @@ export default function Home() {
           </CardContent>
         </Card>
       ))}
-    </ScrollArea>
+    </div>
   );
 
   const Contacts = () => (
-    <ScrollArea className="p-4 flex-grow min-h-0 overflow-y-auto">
+    <div className="p-4 flex-grow min-h-0">
       {dummyContacts.map(contact => (
         <Card key={contact.id} className="mb-2">
           <CardContent>
@@ -181,7 +180,7 @@ export default function Home() {
           </CardContent>
         </Card>
       ))}
-    </ScrollArea>
+    </div>
   );
 
   return (
@@ -193,14 +192,14 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 flex-grow flex flex-col overflow-hidden">
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabContent value="keypad" className="outline-none">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
+            <TabContent value="keypad" className="outline-none flex-grow">
               <Keypad />
             </TabContent>
-            <TabContent value="recent" className="outline-none">
+            <TabContent value="recent" className="outline-none flex-grow">
               <RecentCalls />
             </TabContent>
-            <TabContent value="contacts" className="outline-none">
+            <TabContent value="contacts" className="outline-none flex-grow">
               <Contacts />
             </TabContent>
             <TabsList className="flex justify-between mt-4 sticky bottom-0 bg-secondary">
