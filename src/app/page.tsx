@@ -99,7 +99,7 @@ export default function Home() {
   };
 
   const Keypad = () => (
-    <div className="p-4">
+    <div className="p-4 flex flex-col h-full">
       <div className="flex items-center space-x-2 mb-4">
         <Select value={countryCode} onValueChange={setCountryCode}>
           <SelectTrigger className="w-[120px]">
@@ -186,7 +186,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2 bg-secondary">
-      <Card className="w-full max-w-md space-y-4 p-4 rounded-lg shadow-md flex flex-col h-[600px]">
+      <Card className="w-[400px] h-[600px] space-y-4 p-4 rounded-lg shadow-md flex flex-col">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             Global Connect
@@ -196,19 +196,6 @@ export default function Home() {
           <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabContent value="keypad" className="outline-none">
               <Keypad />
-              {callInfo && (
-                <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
-                  <CardHeader>
-                    <CardTitle className="text-lg font-semibold">
-                      Call Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p>Duration: {callInfo.duration} seconds</p>
-                    <p>Cost: ${callInfo.cost}</p>
-                  </CardContent>
-                </Card>
-              )}
             </TabContent>
             <TabContent value="recent" className="outline-none">
               <RecentCalls />
@@ -216,7 +203,7 @@ export default function Home() {
             <TabContent value="contacts" className="outline-none">
               <Contacts />
             </TabContent>
-            <TabsList className="flex justify-between mt-4">
+            <TabsList className="flex justify-between mt-4 sticky bottom-0 bg-secondary">
               <TabsTrigger value="recent" className="flex flex-col items-center">
                 <Clock className="mr-2 h-4 w-4" />
                 Recent
