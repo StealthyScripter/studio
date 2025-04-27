@@ -6,8 +6,18 @@ import {CallInfo} from '@/services/phone-call';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useToast} from '@/hooks/use-toast';
 import {Separator} from '@/components/ui/separator';
-import {Phone} from 'lucide-react';
+import {Phone, Contact, Clock} from 'lucide-react';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
+
+const countryCodes = [
+  {label: 'United States', code: '+1'},
+  {label: 'United Kingdom', code: '+44'},
+  {label: 'Germany', code: '+49'},
+  {label: 'India', code: '+91'},
+  {label: 'China', code: '+86'},
+  {label: 'Japan', code: '+81'},
+];
 
 const dummyRecentCalls = [
   {id: '1', number: '+15551234567', duration: 60, cost: 0.06},
@@ -23,6 +33,7 @@ const dummyContacts = [
 
 export default function Home() {
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCode, setCountryCode] = useState('+1');
   const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {toast} = useToast();
@@ -132,13 +143,27 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <input
-            type="tel"
-            placeholder="Phone Number"
-            value={phoneNumber}
-            onChange={e => setPhoneNumber(e.target.value)}
-            className="flex-1 w-full p-3 border rounded"
-          />
+          <div className="flex items-center space-x-2">
+            <Select value={countryCode} onValueChange={setCountryCode}>
+              <SelectTrigger className="w-[120px]">
+                <SelectValue placeholder="Select country code" />
+              </SelectTrigger>
+              <SelectContent>
+                {countryCodes.map((country) => (
+                  <SelectItem key={country.code} value={country.code}>
+                    {country.label} ({country.code})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <input
+              type="tel"
+              placeholder="Phone Number"
+              value={phoneNumber}
+              onChange={e => setPhoneNumber(e.target.value)}
+              className="flex-1 w-full p-3 border rounded"
+            />
+          </div>
 
           <Keypad />
 
@@ -158,14 +183,25 @@ export default function Home() {
         className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md"
       >
         <TabsList>
-          <TabsTrigger value="recent">Recent</TabsTrigger>
-          <TabsTrigger value="keypad">Keypad</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts</TabsTrigger>
+          <TabsTrigger value="recent">
+            <Clock className="mr-2 h-4 w-4" />
+            Recent
+          </TabsTrigger>
+          <TabsTrigger value="keypad">
+            <Phone className="mr-2 h-4 w-4" />
+            Keypad
+          </TabsTrigger>
+          <TabsTrigger value="contacts">
+            <Contact className="mr-2 h-4 w-4" />
+            Contacts
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="recent">
           <RecentCalls />
         </TabsContent>
-        <TabsContent value="keypad"></TabsContent>
+        <TabsContent value="keypad">
+          <Keypad />
+        </TabsContent>
         <TabsContent value="contacts">
           <Contacts />
         </TabsContent>
@@ -185,6 +221,20 @@ export default function Home() {
           </CardContent>
         </Card>
       )}
+      <footer className="flex justify-around w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
+        <a href="#" className="flex flex-col items-center">
+          <Phone className="h-5 w-5 mb-1" />
+          Call
+        </a>
+        <a href="#" className="flex flex-col items-center">
+          <Clock className="h-5 w-5 mb-1" />
+          Recent
+        </a>
+        <a href="#" className="flex flex-col items-center">
+          <Contact className="h-5 w-5 mb-1" />
+          Contacts
+        </a>
+      </footer>
     </div>
   );
 }

@@ -16,12 +16,12 @@ body {
     --popover: 210 67% 98%;
     --popover-foreground: 220 70% 10%;
 
-    /* Primary color:  023e8a */
-    --primary: 217 95% 27%;
+    /* Primary color: Deep blue (#1A237E) */
+    --primary: 231 92% 18%;
     --primary-foreground: 210 67% 98%;
 
     /* Secondary color: #EEEEEE */
-    --secondary: 210 70% 93%; /* Light gray */
+    --secondary: 0 0% 93%; /* Light gray */
     --secondary-foreground: 220 70% 10%;
 
     --muted: 210 70% 96%;
@@ -90,4 +90,3 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
