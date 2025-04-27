@@ -223,32 +223,7 @@ export default function Home() {
           </CardContent>
         </Card>
       )}
-      <footer className="flex justify-around w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
-        <a
-          href="#"
-          className="flex flex-col items-center"
-          onClick={() => setActiveTab('recent')}
-        >
-          <Clock className="h-5 w-5 mb-1" />
-          Recent
-        </a>
-        <a
-          href="#"
-          className="flex flex-col items-center"
-          onClick={() => setActiveTab('keypad')}
-        >
-          <Phone className="h-5 w-5 mb-1" />
-          Keypad
-        </a>
-        <a
-          href="#"
-          className="flex flex-col items-center"
-          onClick={() => setActiveTab('contacts')}
-        >
-          <Contact className="h-5 w-5 mb-1" />
-          Contacts
-        </a>
-      </footer>
     </div>
   );
 }
+
