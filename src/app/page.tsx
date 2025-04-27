@@ -98,7 +98,7 @@ export default function Home() {
   };
 
   const Keypad = () => (
-    <div className="p-4 flex flex-col h-full">
+    <div className="flex flex-col h-full">
       <div className="flex items-center space-x-2 mb-4">
         <Select value={countryCode} onValueChange={setCountryCode}>
           <SelectTrigger className="w-[120px]">
@@ -157,7 +157,7 @@ export default function Home() {
   );
 
   const RecentCalls = () => (
-    <div className="p-4 flex-grow min-h-0">
+    <div className="flex-grow min-h-0 overflow-y-auto">
       {dummyRecentCalls.map(call => (
         <Card key={call.id} className="mb-2">
           <CardContent>
@@ -171,7 +171,7 @@ export default function Home() {
   );
 
   const Contacts = () => (
-    <div className="p-4 flex-grow min-h-0">
+    <div className="flex-grow min-h-0 overflow-y-auto">
       {dummyContacts.map(contact => (
         <Card key={contact.id} className="mb-2">
           <CardContent>
