@@ -167,7 +167,7 @@ export default function Home() {
             />
           </div>
 
-          <Keypad />
+          {activeTab === 'keypad' && <Keypad />}
 
           <Button
             onClick={handleCall}
@@ -203,7 +203,6 @@ export default function Home() {
           <RecentCalls />
         </TabsContent>
         <TabsContent value="keypad">
-          <Keypad />
         </TabsContent>
         <TabsContent value="contacts">
           <Contacts />
