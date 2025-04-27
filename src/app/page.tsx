@@ -34,12 +34,24 @@ const dummyRecentCalls = [
   {id: '1', number: '+15551234567', duration: 60, cost: 0.06},
   {id: '2', number: '+442079460000', duration: 120, cost: 0.12},
   {id: '3', number: '+493090197000', duration: 180, cost: 0.18},
+  {id: '4', number: '+15551234567', duration: 60, cost: 0.06},
+  {id: '5', number: '+442079460000', duration: 120, cost: 0.12},
+  {id: '6', number: '+493090197000', duration: 180, cost: 0.18},
+  {id: '7', number: '+15551234567', duration: 60, cost: 0.06},
+  {id: '8', number: '+442079460000', duration: 120, cost: 0.12},
+  {id: '9', number: '+493090197000', duration: 180, cost: 0.18},
 ];
 
 const dummyContacts = [
   {id: '1', name: 'John Doe', number: '+15555555555'},
   {id: '2', name: 'Jane Smith', number: '+447700900000'},
   {id: '3', name: 'Peter Jones', number: '+4915162900000'},
+  {id: '4', name: 'Alice Johnson', number: '+15551112222'},
+  {id: '5', name: 'Bob Williams', number: '+447700333444'},
+  {id: '6', name: 'Charlie Brown', number: '+4915162955555'},
+  {id: '7', name: 'Diana Miller', number: '+15559998888'},
+  {id: '8', name: 'Ethan Davis', number: '+447700777666'},
+  {id: '9', name: 'Fiona Green', number: '+4915162911111'},
 ];
 
 export default function Home() {
@@ -80,35 +92,58 @@ export default function Home() {
   };
 
   const Keypad = () => (
-    <div className="grid grid-cols-3 gap-4 p-4">
-      {[
-        '1',
-        '2',
-        '3',
-        '4',
-        '5',
-        '6',
-        '7',
-        '8',
-        '9',
-        '*',
-        '0',
-        '#',
-      ].map(number => (
-        <Button
-          key={number}
-          variant="secondary"
-          className="rounded-full p-6 text-2xl"
-          onClick={() => handleNumberInput(number)}
-        >
-          {number}
-        </Button>
-      ))}
+    <div className="p-4">
+      <div className="flex items-center space-x-2 mb-4">
+        <Select value={countryCode} onValueChange={setCountryCode}>
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Select country code" />
+          </SelectTrigger>
+          <SelectContent>
+            {countryCodes.map(country => (
+              <SelectItem key={country.code} value={country.code}>
+                {country.label} ({country.code})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          value={phoneNumber}
+          onChange={e => setPhoneNumber(e.target.value)}
+          className="flex-1 w-full p-3 border rounded"
+        />
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        {[
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+          '9',
+          '*',
+          '0',
+          '#',
+        ].map(number => (
+          <Button
+            key={number}
+            variant="secondary"
+            className="rounded-full p-6 text-2xl"
+            onClick={() => handleNumberInput(number)}
+          >
+            {number}
+          </Button>
+        ))}
+      </div>
     </div>
   );
 
   const RecentCalls = () => (
-    <div className="p-4">
+    <div className="p-4 flex-grow min-h-0 overflow-y-auto">
       <CardTitle className="text-lg font-semibold">Recent Calls</CardTitle>
       {dummyRecentCalls.map(call => (
         <Card key={call.id} className="mb-2">
@@ -123,7 +158,7 @@ export default function Home() {
   );
 
   const Contacts = () => (
-    <div className="p-4">
+    <div className="p-4 flex-grow min-h-0 overflow-y-auto">
       <CardTitle className="text-lg font-semibold">Contacts</CardTitle>
       {dummyContacts.map(contact => (
         <Card key={contact.id} className="mb-2">
@@ -138,39 +173,14 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2 bg-secondary">
-      <Card className="w-full max-w-md space-y-4 p-4 rounded-lg shadow-md">
+      <Card className="w-full max-w-md space-y-4 p-4 rounded-lg shadow-md flex flex-col min-h-[600px]">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             Global Connect
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {activeTab === 'keypad' && (
-            <>
-              <div className="flex items-center space-x-2">
-                <Select value={countryCode} onValueChange={setCountryCode}>
-                  <SelectTrigger className="w-[120px]">
-                    <SelectValue placeholder="Select country code" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countryCodes.map(country => (
-                      <SelectItem key={country.code} value={country.code}>
-                        {country.label} ({country.code})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <input
-                  type="tel"
-                  placeholder="Phone Number"
-                  value={phoneNumber}
-                  onChange={e => setPhoneNumber(e.target.value)}
-                  className="flex-1 w-full p-3 border rounded"
-                />
-              </div>
-              <Keypad />
-            </>
-          )}
+        <CardContent className="space-y-4 flex-grow flex flex-col">
+          {activeTab === 'keypad' && <Keypad />}
           {activeTab === 'recent' && <RecentCalls />}
           {activeTab === 'contacts' && <Contacts />}
           <Button
