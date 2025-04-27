@@ -146,6 +146,14 @@ export default function Home() {
           </Button>
         ))}
       </div>
+      <Button
+        onClick={handleCall}
+        disabled={isLoading}
+        className="w-full bg-accent text-accent-foreground hover:bg-accent/90 mt-4"
+      >
+        {isLoading ? 'Calling...' : <Phone className="mr-2" />}
+        {isLoading ? '' : 'Call'}
+      </Button>
     </div>
   );
 
@@ -185,7 +193,7 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 flex-grow flex flex-col overflow-hidden">
-          <Tabs defaultvalue={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabContent value="keypad" className="outline-none">
               <Keypad />
               {callInfo && (
@@ -201,14 +209,6 @@ export default function Home() {
                   </CardContent>
                 </Card>
               )}
-              <Button
-                onClick={handleCall}
-                disabled={isLoading}
-                className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-              >
-                {isLoading ? 'Calling...' : <Phone className="mr-2" />}
-                {isLoading ? '' : 'Call'}
-              </Button>
             </TabContent>
             <TabContent value="recent" className="outline-none">
               <RecentCalls />
