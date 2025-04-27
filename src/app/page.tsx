@@ -10,6 +10,7 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
+  TabsContent as TabContent,
 } from '@/components/ui/tabs';
 import {
   Select,
@@ -18,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {ScrollArea} from '@/components/ui/scroll-area';
 
 const countryCodes = [
   {label: 'United States', code: '+1'},
@@ -38,6 +40,9 @@ const dummyRecentCalls = [
   {id: '7', number: '+15551234567', duration: 60, cost: 0.06},
   {id: '8', number: '+442079460000', duration: 120, cost: 0.12},
   {id: '9', number: '+493090197000', duration: 180, cost: 0.18},
+  {id: '10', number: '+15551234567', duration: 60, cost: 0.06},
+  {id: '11', number: '+442079460000', duration: 120, cost: 0.12},
+  {id: '12', number: '+493090197000', duration: 180, cost: 0.18},
 ];
 
 const dummyContacts = [
@@ -50,6 +55,9 @@ const dummyContacts = [
   {id: '7', name: 'Diana Miller', number: '+15559998888'},
   {id: '8', name: 'Ethan Davis', number: '+447700777666'},
   {id: '9', name: 'Fiona Green', number: '+4915162911111'},
+  {id: '10', name: 'Grace Taylor', number: '+15551230000'},
+  {id: '11', name: 'Henry Wilson', number: '+447700456789'},
+  {id: '12', name: 'Ivy Moore', number: '+4915162922222'},
 ];
 
 export default function Home() {
@@ -142,7 +150,7 @@ export default function Home() {
   );
 
   const RecentCalls = () => (
-    <div className="p-4 flex-grow min-h-0 overflow-y-auto">
+    <ScrollArea className="p-4 flex-grow min-h-0 overflow-y-auto">
       {dummyRecentCalls.map(call => (
         <Card key={call.id} className="mb-2">
           <CardContent>
@@ -152,11 +160,11 @@ export default function Home() {
           </CardContent>
         </Card>
       ))}
-    </div>
+    </ScrollArea>
   );
 
   const Contacts = () => (
-    <div className="p-4 flex-grow min-h-0 overflow-y-auto">
+    <ScrollArea className="p-4 flex-grow min-h-0 overflow-y-auto">
       {dummyContacts.map(contact => (
         <Card key={contact.id} className="mb-2">
           <CardContent>
@@ -165,64 +173,65 @@ export default function Home() {
           </CardContent>
         </Card>
       ))}
-    </div>
+    </ScrollArea>
   );
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2 bg-secondary">
-      <Card className="w-full max-w-md space-y-4 p-4 rounded-lg shadow-md flex flex-col min-h-[600px]">
+      <Card className="w-full max-w-md space-y-4 p-4 rounded-lg shadow-md flex flex-col h-[600px]">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             Global Connect
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 flex-grow flex flex-col overflow-y-auto">
-          {activeTab === 'keypad' && <Keypad />}
-          {activeTab === 'recent' && <RecentCalls />}
-          {activeTab === 'contacts' && <Contacts />}
+        <CardContent className="space-y-4 flex-grow flex flex-col overflow-hidden">
+          <Tabs defaultvalue={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabContent value="keypad" className="outline-none">
+              <Keypad />
+              {callInfo && (
+                <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
+                  <CardHeader>
+                    <CardTitle className="text-lg font-semibold">
+                      Call Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p>Duration: {callInfo.duration} seconds</p>
+                    <p>Cost: ${callInfo.cost}</p>
+                  </CardContent>
+                </Card>
+              )}
+              <Button
+                onClick={handleCall}
+                disabled={isLoading}
+                className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+              >
+                {isLoading ? 'Calling...' : <Phone className="mr-2" />}
+                {isLoading ? '' : 'Call'}
+              </Button>
+            </TabContent>
+            <TabContent value="recent" className="outline-none">
+              <RecentCalls />
+            </TabContent>
+            <TabContent value="contacts" className="outline-none">
+              <Contacts />
+            </TabContent>
+            <TabsList className="flex justify-between mt-4">
+              <TabsTrigger value="recent" className="flex flex-col items-center">
+                <Clock className="mr-2 h-4 w-4" />
+                Recent
+              </TabsTrigger>
+              <TabsTrigger value="keypad" className="flex flex-col items-center">
+                <Phone className="mr-2 h-4 w-4" />
+                Keypad
+              </TabsTrigger>
+              <TabsTrigger value="contacts" className="flex flex-col items-center">
+                <Contact className="mr-2 h-4 w-4" />
+                Contacts
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </CardContent>
-
-        {callInfo && (
-          <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">
-                Call Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Duration: {callInfo.duration} seconds</p>
-              <p>Cost: ${callInfo.cost}</p>
-            </CardContent>
-          </Card>
-        )}
-        <Button
-          onClick={handleCall}
-          disabled={isLoading}
-          className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-        >
-          {isLoading ? 'Calling...' : <Phone className="mr-2" />}
-          {isLoading ? '' : 'Call'}
-        </Button>
-        <Tabs
-          defaultValue={activeTab}
-          onValueChange={setActiveTab}
-          className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md"
-        >
-          <TabsList className="flex justify-between">
-            <TabsTrigger value="recent">
-              <Clock className="mr-2 h-4 w-4" />
-              Recent
-            </TabsTrigger>
-            <TabsTrigger value="keypad">
-              <Phone className="mr-2 h-4 w-4" />
-              Keypad
-            </TabsTrigger>
-            <TabsTrigger value="contacts">
-              <Contact className="mr-2 h-4 w-4" />
-              Contacts
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
       </Card>
     </div>
   );
