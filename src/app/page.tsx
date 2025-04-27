@@ -145,30 +145,34 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <Select value={countryCode} onValueChange={setCountryCode}>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Select country code" />
-              </SelectTrigger>
-              <SelectContent>
-                {countryCodes.map(country => (
-                  <SelectItem key={country.code} value={country.code}>
-                    {country.label} ({country.code})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <input
-              type="tel"
-              placeholder="Phone Number"
-              value={phoneNumber}
-              onChange={e => setPhoneNumber(e.target.value)}
-              className="flex-1 w-full p-3 border rounded"
-            />
-          </div>
-
-          {activeTab === 'keypad' && <Keypad />}
-
+          {activeTab === 'keypad' && (
+            <>
+              <div className="flex items-center space-x-2">
+                <Select value={countryCode} onValueChange={setCountryCode}>
+                  <SelectTrigger className="w-[120px]">
+                    <SelectValue placeholder="Select country code" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countryCodes.map(country => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.label} ({country.code})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <input
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={phoneNumber}
+                  onChange={e => setPhoneNumber(e.target.value)}
+                  className="flex-1 w-full p-3 border rounded"
+                />
+              </div>
+              <Keypad />
+            </>
+          )}
+          {activeTab === 'recent' && <RecentCalls />}
+          {activeTab === 'contacts' && <Contacts />}
           <Button
             onClick={handleCall}
             disabled={isLoading}
@@ -178,52 +182,43 @@ export default function Home() {
             {isLoading ? '' : 'Call'}
           </Button>
         </CardContent>
+
+        <Tabs
+          defaultValue={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md"
+        >
+          <TabsList className="flex justify-between">
+            <TabsTrigger value="recent">
+              <Clock className="mr-2 h-4 w-4" />
+              Recent
+            </TabsTrigger>
+            <TabsTrigger value="keypad">
+              <Phone className="mr-2 h-4 w-4" />
+              Keypad
+            </TabsTrigger>
+            <TabsTrigger value="contacts">
+              <Contact className="mr-2 h-4 w-4" />
+              Contacts
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {callInfo && (
+          <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Call Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Separator className="my-2" />
+              <p>Duration: {callInfo.duration} seconds</p>
+              <p>Cost: ${callInfo.cost}</p>
+            </CardContent>
+          </Card>
+        )}
       </Card>
-
-      <Tabs
-        defaultValue={activeTab}
-        onValueChange={setActiveTab}
-        className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md"
-      >
-        <TabsList>
-          <TabsTrigger value="recent">
-            <Clock className="mr-2 h-4 w-4" />
-            Recent
-          </TabsTrigger>
-          <TabsTrigger value="keypad">
-            <Phone className="mr-2 h-4 w-4" />
-            Keypad
-          </TabsTrigger>
-          <TabsTrigger value="contacts">
-            <Contact className="mr-2 h-4 w-4" />
-            Contacts
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="recent">
-          <RecentCalls />
-        </TabsContent>
-        <TabsContent value="keypad">
-        </TabsContent>
-        <TabsContent value="contacts">
-          <Contacts />
-        </TabsContent>
-      </Tabs>
-
-      {callInfo && (
-        <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold">
-              Call Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Separator className="my-2" />
-            <p>Duration: {callInfo.duration} seconds</p>
-            <p>Cost: ${callInfo.cost}</p>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
-
