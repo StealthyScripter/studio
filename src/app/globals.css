@@ -16,19 +16,19 @@ body {
     --popover: 210 67% 98%;
     --popover-foreground: 220 70% 10%;
 
-    /* Primary color: Deep blue (#1A237E) */
-    --primary: 231 92% 18%;
+    /* Primary color: Deep blue (#03045E) */
+    --primary: 227 90% 17%;
     --primary-foreground: 210 67% 98%;
 
     /* Secondary color: #EEEEEE */
-    --secondary: 0 0% 93%; /* Light gray */
+    --secondary: 215 23% 94%; /* Light gray */
     --secondary-foreground: 220 70% 10%;
 
     --muted: 210 70% 96%;
     --muted-foreground: 220 70% 45%;
 
-    /* Accent: Teal (#00ACC1) */
-    --accent: 194 100% 42%; /*00b4d8*/
+    /* Accent: Teal (#00B4D8) */
+    --accent: 195 100% 42%; /*00b4d8*/
     --accent-foreground: 210 70% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -37,7 +37,7 @@ body {
     --input: 220 13% 91%;
     --ring: 220 70% 10%;
     --radius: 0.5rem;
-    --sidebar-background: 210 67% 98%;
+    --sidebar-background: 215 23% 94%;
     --sidebar-foreground: 220 70% 26%;
     --sidebar-primary: 220 70% 10%;
     --sidebar-primary-foreground: 210 67% 98%;
@@ -90,3 +90,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+

@@ -5,11 +5,9 @@ import {Button} from '@/components/ui/button';
 import {CallInfo} from '@/services/phone-call';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useToast} from '@/hooks/use-toast';
-import {Separator} from '@/components/ui/separator';
 import {Phone, Contact, Clock} from 'lucide-react';
 import {
   Tabs,
-  TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs';
@@ -65,6 +63,7 @@ export default function Home() {
   const handleCall = async () => {
     setIsLoading(true);
     try {
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       const duration = Math.floor(Math.random() * 300) + 30;
       const cost = duration * 0.001;
@@ -144,7 +143,6 @@ export default function Home() {
 
   const RecentCalls = () => (
     <div className="p-4 flex-grow min-h-0 overflow-y-auto">
-      <CardTitle className="text-lg font-semibold">Recent Calls</CardTitle>
       {dummyRecentCalls.map(call => (
         <Card key={call.id} className="mb-2">
           <CardContent>
@@ -159,7 +157,6 @@ export default function Home() {
 
   const Contacts = () => (
     <div className="p-4 flex-grow min-h-0 overflow-y-auto">
-      <CardTitle className="text-lg font-semibold">Contacts</CardTitle>
       {dummyContacts.map(contact => (
         <Card key={contact.id} className="mb-2">
           <CardContent>
@@ -179,20 +176,33 @@ export default function Home() {
             Global Connect
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 flex-grow flex flex-col">
+        <CardContent className="space-y-4 flex-grow flex flex-col overflow-y-auto">
           {activeTab === 'keypad' && <Keypad />}
           {activeTab === 'recent' && <RecentCalls />}
           {activeTab === 'contacts' && <Contacts />}
-          <Button
-            onClick={handleCall}
-            disabled={isLoading}
-            className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
-          >
-            {isLoading ? 'Calling...' : <Phone className="mr-2" />}
-            {isLoading ? '' : 'Call'}
-          </Button>
         </CardContent>
 
+        {callInfo && (
+          <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold">
+                Call Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Duration: {callInfo.duration} seconds</p>
+              <p>Cost: ${callInfo.cost}</p>
+            </CardContent>
+          </Card>
+        )}
+        <Button
+          onClick={handleCall}
+          disabled={isLoading}
+          className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+        >
+          {isLoading ? 'Calling...' : <Phone className="mr-2" />}
+          {isLoading ? '' : 'Call'}
+        </Button>
         <Tabs
           defaultValue={activeTab}
           onValueChange={setActiveTab}
@@ -213,21 +223,6 @@ export default function Home() {
             </TabsTrigger>
           </TabsList>
         </Tabs>
-
-        {callInfo && (
-          <Card className="w-full max-w-md mt-4 p-4 rounded-lg shadow-md">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">
-                Call Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Separator className="my-2" />
-              <p>Duration: {callInfo.duration} seconds</p>
-              <p>Cost: ${callInfo.cost}</p>
-            </CardContent>
-          </Card>
-        )}
       </Card>
     </div>
   );
