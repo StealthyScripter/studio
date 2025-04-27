@@ -78,7 +78,7 @@ export default function Home() {
               </SelectTrigger>
               <SelectContent>
                 {countryCodes.map((country) => (
-                  <SelectItem key={country.code} value={country.code}>
+                  <SelectItem key={`${country.code}-${country.label}`} value={country.code}>
                     {country.label} ({country.code})
                   </SelectItem>
                 ))}
