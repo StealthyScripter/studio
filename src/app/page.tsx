@@ -140,30 +140,34 @@ const Keypad = ({
 };
 
 const RecentCalls = () => (
-  <div className="flex-grow min-h-0 overflow-auto">
-    {dummyRecentCalls.map(call => (
-      <Card key={call.id} className="mb-2">
-        <CardContent>
-          <p>Number: {call.number}</p>
-          <p>Duration: {call.duration} seconds</p>
-          <p>Cost: ${call.cost}</p>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
+  <ScrollArea className="flex-grow min-h-0">
+    <div className="flex-grow min-h-0">
+      {dummyRecentCalls.map(call => (
+        <Card key={call.id} className="mb-2">
+          <CardContent>
+            <p>Number: {call.number}</p>
+            <p>Duration: {call.duration} seconds</p>
+            <p>Cost: ${call.cost}</p>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </ScrollArea>
 );
 
 const Contacts = () => (
-  <div className="flex-grow min-h-0 overflow-auto">
-    {dummyContacts.map(contact => (
-      <Card key={contact.id} className="mb-2">
-        <CardContent>
-          <p>{contact.name}</p>
-          <p>Number: {contact.number}</p>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
+  <ScrollArea className="flex-grow min-h-0">
+    <div className="flex-grow min-h-0">
+      {dummyContacts.map(contact => (
+        <Card key={contact.id} className="mb-2">
+          <CardContent>
+            <p>{contact.name}</p>
+            <p>Number: {contact.number}</p>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </ScrollArea>
 );
 
 export default function Home() {
