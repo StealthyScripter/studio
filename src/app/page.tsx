@@ -76,7 +76,7 @@ const Keypad = ({
   handleCall: () => Promise<void>;
 }) => {
   const handleNumberInput = (number: string) => {
-    setPhoneNumber(prevNumber => prevNumber + number);
+    setPhoneNumber((prevNumber: string) => prevNumber + number);
   };
 
   return (
@@ -99,7 +99,7 @@ const Keypad = ({
           placeholder="Phone Number"
           value={phoneNumber}
           onChange={e => setPhoneNumber(e.target.value)}
-          className="flex-1 w-full p-3 border rounded"
+          className="flex-1 w-full p-3 border rounded sm:w-full md:w-3/4"
         />
       </div>
       <div className="grid grid-cols-3 gap-4">
@@ -132,17 +132,22 @@ const Keypad = ({
         disabled={isLoading}
         className="w-full bg-accent text-accent-foreground hover:bg-accent/90 mt-4"
       >
-        {isLoading ? 'Calling...' : <Phone className="mr-2" />}
-        {isLoading ? '' : 'Call'}
+        {isLoading ? (
+          <div className="animate-spin rounded-full border-4 border-t-transparent border-gray-200 w-6 h-6 mx-auto" />
+        ) : (
+          <Phone className="mr-2" />
+        )}
+        {isLoading ? 'Calling...' : 'Call'}
       </Button>
     </div>
   );
 };
 
 const RecentCalls = () => (
-  <ScrollArea className="flex-grow min-h-0">
+  <ScrollArea className="flex-grow min-h-0 overflow-auto">
     <div className="flex-grow min-h-0">
-      {dummyRecentCalls.map(call => (
+      {dummyRecentCalls.length > 0 ? (
+      dummyRecentCalls.map(call => (
         <Card key={call.id} className="mb-2">
           <CardContent>
             <p>Number: {call.number}</p>
@@ -150,22 +155,35 @@ const RecentCalls = () => (
             <p>Cost: ${call.cost}</p>
           </CardContent>
         </Card>
-      ))}
+      ))
+      ) : (
+        <p className="text-center text-gray-500">
+          <Clock className="h-6 w-6 mx-auto mb-2" />
+            No recent calls found.
+        </p>
+      )}
     </div>
   </ScrollArea>
 );
 
 const Contacts = () => (
-  <ScrollArea className="flex-grow min-h-0">
+  <ScrollArea className="flex-grow min-h-0 overflow-auto">
     <div className="flex-grow min-h-0">
-      {dummyContacts.map(contact => (
+      {dummyContacts.length > 0 ? (
+      dummyContacts.map(contact => (
         <Card key={contact.id} className="mb-2">
           <CardContent>
             <p>{contact.name}</p>
             <p>Number: {contact.number}</p>
           </CardContent>
         </Card>
-      ))}
+      ))
+      ) : (
+        <p className="text-center text-gray-500">
+          <Clock className="h-6 w-6 mx-auto mb-2" />
+          No contacts found.
+        </p>
+      )}
     </div>
   </ScrollArea>
 );
@@ -194,6 +212,7 @@ export default function Home() {
       });
     } catch (error: any) {
       console.error('Call initiation failed:', error);
+      const errorMessage = error?.message || 'Failed to initiate call. Please try again.';
       toast({
         variant: 'destructive',
         title: 'Error initiating call',
@@ -214,38 +233,39 @@ export default function Home() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 flex-grow flex flex-col overflow-hidden">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
-            <TabContent value="keypad" className="outline-none flex-grow">
-              <Keypad
-                phoneNumber={phoneNumber}
-                setPhoneNumber={setPhoneNumber}
-                countryCode={countryCode}
-                setCountryCode={setCountryCode}
-                isLoading={isLoading}
-                handleCall={handleCall}
-              />
-            </TabContent>
-            <TabContent value="recent" className="outline-none flex-grow">
-              <RecentCalls />
-            </TabContent>
-            <TabContent value="contacts" className="outline-none flex-grow">
-              <Contacts />
-            </TabContent>
-            <TabsList className="flex justify-between mt-4 sticky bottom-0 bg-secondary">
-              <TabsTrigger value="recent" className="flex flex-col items-center">
-                <Clock className="mr-2 h-4 w-4" />
-                Recent
-              </TabsTrigger>
-              <TabsTrigger value="keypad" className="flex flex-col items-center">
-                <Phone className="mr-2 h-4 w-4" />
-                Keypad
-              </TabsTrigger>
-              <TabsTrigger value="contacts" className="flex flex-col items-center">
-                <Contact className="mr-2 h-4 w-4" />
-                Contacts
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
+  <TabContent value="keypad" className="outline-none flex-grow">
+    <Keypad
+      phoneNumber={phoneNumber}
+      setPhoneNumber={setPhoneNumber}
+      countryCode={countryCode}
+      setCountryCode={setCountryCode}
+      isLoading={isLoading}
+      handleCall={handleCall}
+    />
+  </TabContent>
+  <TabContent value="recent" className="outline-none flex-grow">
+    <RecentCalls />
+  </TabContent>
+  <TabContent value="contacts" className="outline-none flex-grow">
+    <Contacts />
+  </TabContent>
+  <TabsList className="flex justify-between mt-4 sticky bottom-0 bg-secondary z-10">
+    <TabsTrigger value="recent" className="flex flex-col items-center">
+      <Clock className="mr-2 h-4 w-4" />
+      Recent
+    </TabsTrigger>
+    <TabsTrigger value="keypad" className="flex flex-col items-center">
+      <Phone className="mr-2 h-4 w-4" />
+      Keypad
+    </TabsTrigger>
+    <TabsTrigger value="contacts" className="flex flex-col items-center">
+      <Contact className="mr-2 h-4 w-4" />
+      Contacts
+    </TabsTrigger>
+  </TabsList>
+</Tabs>
+
         </CardContent>
       </Card>
     </div>
