@@ -2,7 +2,7 @@
 
 import {useState} from 'react';
 import {Button} from '@/components/ui/button';
-import {CallInfo} from '@/services/phone-call';
+import {CallInfo, initiateCall} from '@/services/phone-call';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useToast} from '@/hooks/use-toast';
 import {Phone, Contact, Clock} from 'lucide-react';
@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {ScrollArea} from '@/components/ui/scroll-area';
 
 const countryCodes = [
   {label: 'United States', code: '+1'},
@@ -59,45 +60,26 @@ const dummyContacts = [
   {id: '12', name: 'Ivy Moore', number: '+4915162922222'},
 ];
 
-export default function Home() {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryCode, setCountryCode] = useState('+1');
-  const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('keypad');
-  const {toast} = useToast();
-
-  const handleCall = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const duration = Math.floor(Math.random() * 300) + 30;
-      const cost = duration * 0.001;
-      const callData = {duration: duration, cost: parseFloat(cost.toFixed(2))};
-      setCallInfo(callData);
-      toast({
-        title: 'Call initiated',
-        description: `Call duration: ${callData.duration} seconds, Cost: $${callData.cost}`,
-      });
-    } catch (error: any) {
-      console.error('Call initiation failed:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error initiating call',
-        description:
-          error.message || 'Failed to initiate call. Please try again.',
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const Keypad = ({
+  phoneNumber,
+  setPhoneNumber,
+  countryCode,
+  setCountryCode,
+  isLoading,
+  handleCall,
+}: {
+  phoneNumber: string;
+  setPhoneNumber: (value: string) => void;
+  countryCode: string;
+  setCountryCode: (value: string) => void;
+  isLoading: boolean;
+  handleCall: () => Promise<void>;
+}) => {
   const handleNumberInput = (number: string) => {
     setPhoneNumber(prevNumber => prevNumber + number);
   };
 
-  const Keypad = () => (
+  return (
     <div className="flex flex-col h-full">
       <div className="flex items-center space-x-2 mb-4">
         <Select value={countryCode} onValueChange={setCountryCode}>
@@ -155,33 +137,69 @@ export default function Home() {
       </Button>
     </div>
   );
+};
 
-  const RecentCalls = () => (
-    <div className="flex-grow min-h-0 overflow-y-auto">
-      {dummyRecentCalls.map(call => (
-        <Card key={call.id} className="mb-2">
-          <CardContent>
-            <p>Number: {call.number}</p>
-            <p>Duration: {call.duration} seconds</p>
-            <p>Cost: ${call.cost}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
+const RecentCalls = () => (
+  <div className="flex-grow min-h-0 overflow-auto">
+    {dummyRecentCalls.map(call => (
+      <Card key={call.id} className="mb-2">
+        <CardContent>
+          <p>Number: {call.number}</p>
+          <p>Duration: {call.duration} seconds</p>
+          <p>Cost: ${call.cost}</p>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+);
 
-  const Contacts = () => (
-    <div className="flex-grow min-h-0 overflow-y-auto">
-      {dummyContacts.map(contact => (
-        <Card key={contact.id} className="mb-2">
-          <CardContent>
-            <p>{contact.name}</p>
-            <p>Number: {contact.number}</p>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
+const Contacts = () => (
+  <div className="flex-grow min-h-0 overflow-auto">
+    {dummyContacts.map(contact => (
+      <Card key={contact.id} className="mb-2">
+        <CardContent>
+          <p>{contact.name}</p>
+          <p>Number: {contact.number}</p>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+);
+
+export default function Home() {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryCode, setCountryCode] = useState('+1');
+  const [callInfo, setCallInfo] = useState<CallInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('keypad');
+  const {toast} = useToast();
+
+  const handleCall = async () => {
+    setIsLoading(true);
+    try {
+      const callRequest = {
+        phoneNumber: phoneNumber,
+        countryCode: countryCode,
+      };
+      const callData = await initiateCall(callRequest);
+
+      setCallInfo(callData);
+      toast({
+        title: 'Call initiated',
+        description: `Call duration: ${callData.duration} seconds, Cost: $${callData.cost}`,
+      });
+    } catch (error: any) {
+      console.error('Call initiation failed:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error initiating call',
+        description:
+          error.message || 'Failed to initiate call. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-start min-h-screen py-2 bg-secondary">
@@ -194,7 +212,14 @@ export default function Home() {
         <CardContent className="space-y-4 flex-grow flex flex-col overflow-hidden">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full flex flex-col">
             <TabContent value="keypad" className="outline-none flex-grow">
-              <Keypad />
+              <Keypad
+                phoneNumber={phoneNumber}
+                setPhoneNumber={setPhoneNumber}
+                countryCode={countryCode}
+                setCountryCode={setCountryCode}
+                isLoading={isLoading}
+                handleCall={handleCall}
+              />
             </TabContent>
             <TabContent value="recent" className="outline-none flex-grow">
               <RecentCalls />
