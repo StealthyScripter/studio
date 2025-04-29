@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {ScrollArea} from '@/components/ui/scroll-area';
+import { string } from 'zod';
 
 const countryCodes = [
   {label: 'United States', code: '+1'},
@@ -69,7 +70,7 @@ const Keypad = ({
   handleCall,
 }: {
   phoneNumber: string;
-  setPhoneNumber: (value: string) => void;
+  setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
   countryCode: string;
   setCountryCode: (value: string) => void;
   isLoading: boolean;
@@ -77,7 +78,7 @@ const Keypad = ({
 }) => {
   const handleNumberInput = (number: string) => {
     setPhoneNumber((prevNumber: string) => prevNumber + number);
-  };
+ };
 
   return (
     <div className="flex flex-col h-full">
